@@ -16,7 +16,7 @@ struct gui_parameters {
 
 // The structure of the custom scene
 struct scene_structure : scene_inputs_generic {
-	
+
 	// ****************************** //
 	// Elements and shapes of the scene
 	// ****************************** //
@@ -28,14 +28,16 @@ struct scene_structure : scene_inputs_generic {
 	environment_structure environment;   // Standard environment controler
 	input_devices inputs;                // Storage for inputs status (mouse, keyboard, window dimension)
 	gui_parameters gui;                  // Standard GUI element storage
-	
+
 	// ****************************** //
 	// Elements and shapes of the scene
 	// ****************************** //
 	cgp::timer_event_periodic timer;
-	std::vector<particle_structure> particles;
+	particle_structure ball;
 	cgp::mesh_drawable sphere;
+    cgp::mesh_drawable plane;
 	cgp::curve_drawable cube_wireframe;
+    std::vector<plane_structure*> ground;
 
 
 	// ****************************** //
@@ -54,9 +56,6 @@ struct scene_structure : scene_inputs_generic {
 	void emit_particle();
 	void simulation_step(float dt);
 	void sphere_display();
+
+    void plane_display();
 };
-
-
-
-
-

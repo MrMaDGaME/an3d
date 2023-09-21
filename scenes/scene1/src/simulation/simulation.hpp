@@ -2,9 +2,7 @@
 
 #include "cgp/cgp.hpp"
 
-
-struct particle_structure
-{
+struct particle_structure {
     cgp::vec3 p; // Position
     cgp::vec3 v; // Speed
 
@@ -12,6 +10,11 @@ struct particle_structure
     float r;     // Radius
     float m;     // mass
 };
+struct plane_structure {
+    cgp::vec3 p;    // Position
+    cgp::vec3 n;    // Normal
+    cgp::vec3 c;    // Color
+    float s;        // Size
+};
 
-void simulate(std::vector<particle_structure>& particles, float dt);
-
+void simulate(particle_structure &particle, const std::vector<plane_structure *> &ground, float dt);

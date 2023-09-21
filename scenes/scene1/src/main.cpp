@@ -2,7 +2,7 @@
 
 #include "cgp/cgp.hpp" // Give access to the complete CGP library
 #include "environment.hpp" // The general scene environment + project variable
-#include <iostream> 
+#include <iostream>
 
 
 
@@ -34,7 +34,7 @@ int main(int, char* argv[])
 {
 	std::cout << "Run " << argv[0] << std::endl;
 
-	
+
 
 	// ************************ //
 	//     INITIALISATION
@@ -115,7 +115,7 @@ void animation_loop()
 
 
 	// Display the ImGUI interface (button, sliders, etc)
-	scene.display_gui();
+//	scene.display_gui();
 
 	// Handle camera behavior in standard frame
 	scene.idle_frame();
@@ -188,7 +188,7 @@ window_structure standard_window_initialization(int width_target, int height_tar
 	// Set the callback functions for the inputs
 	glfwSetMouseButtonCallback(window.glfw_window, mouse_click_callback); // Event called when a button of the mouse is clicked/released
 	glfwSetCursorPosCallback(window.glfw_window, mouse_move_callback);    // Event called when the mouse is moved
-	glfwSetWindowSizeCallback(window.glfw_window, window_size_callback);  // Event called when the window is rescaled        
+	glfwSetWindowSizeCallback(window.glfw_window, window_size_callback);  // Event called when the window is rescaled
 	glfwSetKeyCallback(window.glfw_window, keyboard_callback);            // Event called when a keyboard touch is pressed/released
 	glfwSetScrollCallback(window.glfw_window, mouse_scroll_callback);     // Event called when scrolling the mouse
 
@@ -217,7 +217,7 @@ void mouse_move_callback(GLFWwindow* /*window*/, double xpos, double ypos)
 void mouse_click_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
-	
+
 	scene.inputs.mouse.click.update_from_glfw_click(button, action);
 	scene.mouse_click_event();
 }
@@ -236,7 +236,7 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
 {
 	ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 	bool imgui_capture_keyboard = ImGui::GetIO().WantCaptureKeyboard;
-	
+
 	if(!imgui_capture_keyboard){
 		scene.inputs.keyboard.update_from_glfw_key(key, action);
 		scene.keyboard_event();
@@ -262,6 +262,3 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
 	}
 
 }
-
-
-
