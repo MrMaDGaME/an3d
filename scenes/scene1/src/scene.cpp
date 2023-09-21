@@ -12,7 +12,7 @@ void scene_structure::initialize() {
 
     // Edges of the containing cube
     //  Note: this data structure is set for display purpose - don't use it to compute some information on the cube - it would be un-necessarily complex
-    numarray<vec3> cube_wireframe_data = {{-1, -1, -1},
+    /*numarray<vec3> cube_wireframe_data = {{-1, -1, -1},
                                           {1,  -1, -1},
                                           {1,  -1, -1},
                                           {1,  1,  -1},
@@ -36,19 +36,19 @@ void scene_structure::initialize() {
                                           {1,  1,  1},
                                           {-1, 1,  -1},
                                           {-1, 1,  1}};
-    cube_wireframe.initialize_data_on_gpu(cube_wireframe_data);
+    cube_wireframe.initialize_data_on_gpu(cube_wireframe_data);*/
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
     plane.initialize_data_on_gpu(mesh_primitive_quadrangle());
-    ball.p = {0, 0, 0.1f};
+    ball.p = {0, 0, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
-    ball.v = {0, 0, 0};
+    ball.v = {1, 0, 0};
     ball.m = 1.0f;
     auto *plane = new plane_structure();
     plane->p = {0, 0, 0};
     plane->n = {0, 0, 1};
     plane->c = {0, 0, 1};
-    plane->s = 1.0f;
+    plane->s = 10.0f;
     ground.push_back(plane);
 }
 
@@ -66,8 +66,8 @@ void scene_structure::display_frame() {
     float const dt = 0.01f * timer.scale;
     simulate(ball, ground, dt);
     sphere_display();
-//    draw(plane, environment);
     plane_display();
+//    draw(plane, environment);
     // Display the result
     if (gui.display_frame)
         draw(global_frame, environment);
@@ -86,9 +86,11 @@ void scene_structure::sphere_display() {
 
 void scene_structure::plane_display() {
     for (auto &plane_struct: ground) {
-        plane.model.translation = plane_struct->p;
+        vec3 offset = {0.5f * plane_struct->s, 0.5f * plane_struct->s, 0.0f};
+        plane.model.translation = plane_struct->p - offset;
         plane.model.scaling = plane_struct->s;
         plane.material.color = plane_struct->c;
+        // rotation ???
         draw(plane, environment);
     }
 }
