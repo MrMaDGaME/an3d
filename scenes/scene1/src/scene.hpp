@@ -49,7 +49,9 @@ struct scene_structure : scene_inputs_generic {
 	void display_frame(); // The frame display to be called within the animation loop
 	void display_gui();   // The display of the GUI, also called within the animation loop
 
-	void shotBall(particle_structure* ball);
+	void shotBall(particle_structure* ball, float force);
+	void set_center_of_rotation(vec3 const& new_center);
+	void follow_ball(vec3 const& ball_position);
 
 	void mouse_move_event();
 	void mouse_click_event();
