@@ -38,18 +38,33 @@ void scene_structure::initialize() {
                                           {-1, 1,  1}};
     cube_wireframe.initialize_data_on_gpu(cube_wireframe_data);*/
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
-    plane.initialize_data_on_gpu(mesh_primitive_quadrangle());
+//    plane.initialize_data_on_gpu(mesh_primitive_quadrangle());
     ball.p = {0, 0, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
-    ball.v = {1, 0, 0};
+    ball.v = {0, 0, 0};
     ball.m = 1.0f;
-    auto *plane = new plane_structure();
-    plane->p = {0, 0, 0};
-    plane->n = {0, 0, 1};
-    plane->c = {0, 0, 1};
-    plane->s = 10.0f;
-    ground.push_back(plane);
+    auto *plane_1 = new plane_structure();
+    plane_1->x1 = {-1, -1, 1};
+    plane_1->x2 = {1,  -1, 1};
+    plane_1->x3 = {1,  1,  0};
+    plane_1->x4 = {-1, 1,  0};
+    plane_1->c = {0, 0, 1};
+    planes.push_back(plane_1);
+    auto *plane_2 = new plane_structure();
+    plane_2->x1 = {1, 1, 0};
+    plane_2->x2 = {-1,  1, 0};
+    plane_2->x3 = {-1,  2,  0};
+    plane_2->x4 = {1, 2,  0};
+    plane_2->c = {0, 1, 0};
+    planes.push_back(plane_2);
+    auto *plane_3 = new plane_structure();
+    plane_3->x1 = {-1,  1,  0};
+    plane_3->x2 = {1, 2,  0};
+    plane_3->x3 = {1, 2,  1};
+    plane_3->x4 = {-1,  1,  1};
+    plane_3->c = {1, 0, 0};
+    planes.push_back(plane_3);
 }
 
 void scene_structure::display_frame() {
@@ -64,7 +79,7 @@ void scene_structure::display_frame() {
 
     // Call the simulation of the particle system
     float const dt = 0.01f * timer.scale;
-    simulate(ball, ground, dt);
+    simulate(ball, planes, dt);
     sphere_display();
     plane_display();
 //    draw(plane, environment);
@@ -85,10 +100,11 @@ void scene_structure::sphere_display() {
 }
 
 void scene_structure::plane_display() {
-    for (auto &plane_struct: ground) {
-        vec3 offset = {0.5f * plane_struct->s, 0.5f * plane_struct->s, 0.0f};
-        plane.model.translation = plane_struct->p - offset;
-        plane.model.scaling = plane_struct->s;
+    for (auto &plane_struct: planes) {
+//        vec3 offset = {0.5f * plane_struct->s, 0.5f * plane_struct->s, 0.0f};
+//        plane.model.translation = plane_struct->p - offset;
+//        plane.model.scaling = plane_struct->s;
+        plane.initialize_data_on_gpu(mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
         plane.material.color = plane_struct->c;
         // rotation ???
         draw(plane, environment);

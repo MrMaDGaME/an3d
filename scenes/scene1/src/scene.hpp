@@ -37,7 +37,7 @@ struct scene_structure : scene_inputs_generic {
 	cgp::mesh_drawable sphere;
     cgp::mesh_drawable plane;
 	cgp::curve_drawable cube_wireframe;
-    std::vector<plane_structure*> ground;
+    std::vector<plane_structure*> planes;
 
 
 	// ****************************** //

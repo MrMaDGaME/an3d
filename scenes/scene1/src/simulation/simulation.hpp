@@ -11,10 +11,12 @@ struct particle_structure {
     float m;     // mass
 };
 struct plane_structure {
-    cgp::vec3 p;    // Position
-    cgp::vec3 n;    // Normal
+    // Edges
+    cgp::vec3 x1;
+    cgp::vec3 x2;
+    cgp::vec3 x3;
+    cgp::vec3 x4;
     cgp::vec3 c;    // Color
-    float s;        // Size
 };
 
-void simulate(particle_structure &particle, const std::vector<plane_structure *> &ground, float dt);
+void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, float dt);
