@@ -10,6 +10,12 @@ void scene_structure::initialize() {
     global_frame.initialize_data_on_gpu(mesh_primitive_frame());
     timer.event_period = 0.5f;
 
+    //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
+    image_structure image_skybox_template = image_load_file("../assets/skybox_debug.png");
+    std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
+    skybox.initialize_data_on_gpu();
+	skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
+
     // Edges of the containing cube
     //  Note: this data structure is set for display purpose - don't use it to compute some information on the cube - it would be un-necessarily complex
     /*numarray<vec3> cube_wireframe_data = {{-1, -1, -1},
@@ -70,6 +76,7 @@ void scene_structure::initialize() {
 void scene_structure::display_frame() {
     // Set the light to the current position of the camera
     environment.light = camera_control.camera_model.position();
+    //draw(skybox, environment);
     if (gui.display_frame)
         draw(global_frame, environment);
     timer.update();
@@ -141,6 +148,57 @@ void scene_structure::display_gui() {
     ImGui::Checkbox("Add sphere", &gui.add_sphere);
 }
 
+
+void scene_structure::shotBall(particle_structure *ball, float force) {
+    // Apply force depending on camera orientation
+    // Pos = camera_control.camera_model.position();
+    auto pos = camera_control.camera_model.position();
+    auto orientation = camera_control.camera_model.orientation();
+
+    // Calculte the angle between the camera and the ball
+    //auto angle = std::acos(dot(normalize(ball->p - pos), normalize(ball->v)));
+
+    ball->v = -force * orientation * vec3(0, 0, 1);
+    ball->c = {1, 0, 0};
+    ball->m = 1.0f;
+    // Make the camera look at the ball
+    std::cout << pos << std::endl;
+}
+
+void scene_structure::set_center_of_rotation(vec3 const& new_center) {
+    camera_control.camera_model.center_of_rotation = new_center;
+}
+
+
+vec3 lerp(vec3 start, vec3 end, float factor) {
+    return start + factor * (end - start);
+}
+const float desiredDistanceBehindBall = 5.0f;
+const float timeAhead = 2.0f;
+const float smoothFactor = 0.1f; // Ajustez cette valeur pour rendre la transition plus rapide ou plus lente
+
+vec3 smooth_interpolate(vec3 current, vec3 target, float factor) {
+    return current + factor * (target - current);
+}
+
+void scene_structure::follow_ball(vec3 const& ball_position) {
+
+    // Calculez un point derrière la balle basé sur sa vitesse
+    vec3 cameraOffset = -normalize(ball.v) * desiredDistanceBehindBall;
+    vec3 targetCameraPosition = ball_position + cameraOffset;
+    targetCameraPosition.z = camera_control.camera_model.position().z;
+
+    // Interpolation lisse entre la position actuelle de la caméra et la position cible
+    vec3 newCameraPosition = smooth_interpolate(ball_position, targetCameraPosition, smoothFactor);
+    newCameraPosition += vec3{3, 3, 2 }; // Ajoutez un peu de hauteur pour que la caméra ne soit pas dans le sol
+    // Faites pointer la caméra vers la balle ou légèrement en avant
+    vec3 lookAtPoint = ball_position + ball.v;
+
+    camera_control.camera_model.look_at(newCameraPosition, lookAtPoint);
+}
+
+
+
 void scene_structure::mouse_move_event() {
     if (!inputs.keyboard.shift)
         camera_control.action_mouse_move(environment.camera_view);
@@ -152,6 +210,14 @@ void scene_structure::mouse_click_event() {
 
 void scene_structure::keyboard_event() {
     camera_control.action_keyboard(environment.camera_view);
+    if (inputs.keyboard.shift) {
+        shotBall(&ball, 2.0f);
+        follow_ball(ball.p);
+    }
+    // Créer un bouton space pour faire sauter la balle
+    if (inputs.keyboard.ctrl) {
+        shotBall(&ball, 15.0f);
+    }
 }
 
 void scene_structure::idle_frame() {
