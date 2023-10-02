@@ -11,40 +11,12 @@ void scene_structure::initialize() {
     timer.event_period = 0.5f;
 
     //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
-    image_structure image_skybox_template = image_load_file("../assets/skybox_debug.png");
+    image_structure image_skybox_template = image_load_file("../../assets/skybox_debug.png");
     std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
     skybox.initialize_data_on_gpu();
-	skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10], image_grid[4]);
-
-    // Edges of the containing cube
-    //  Note: this data structure is set for display purpose - don't use it to compute some information on the cube - it would be un-necessarily complex
-    /*numarray<vec3> cube_wireframe_data = {{-1, -1, -1},
-                                          {1,  -1, -1},
-                                          {1,  -1, -1},
-                                          {1,  1,  -1},
-                                          {1,  1,  -1},
-                                          {-1, 1,  -1},
-                                          {-1, 1,  -1},
-                                          {-1, -1, -1},
-                                          {-1, -1, 1},
-                                          {1,  -1, 1},
-                                          {1,  -1, 1},
-                                          {1,  1,  1},
-                                          {1,  1,  1},
-                                          {-1, 1,  1},
-                                          {-1, 1,  1},
-                                          {-1, -1, 1},
-                                          {-1, -1, -1},
-                                          {-1, -1, 1},
-                                          {1,  -1, -1},
-                                          {1,  -1, 1},
-                                          {1,  1,  -1},
-                                          {1,  1,  1},
-                                          {-1, 1,  -1},
-                                          {-1, 1,  1}};
-    cube_wireframe.initialize_data_on_gpu(cube_wireframe_data);*/
+    skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],
+                                             image_grid[4]);
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
-//    plane.initialize_data_on_gpu(mesh_primitive_quadrangle());
     ball.p = {0, 0, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
@@ -52,25 +24,30 @@ void scene_structure::initialize() {
     ball.m = 1.0f;
     auto *plane_1 = new plane_structure();
     plane_1->x1 = {-1, -1, 1};
-    plane_1->x2 = {1,  -1, 1};
-    plane_1->x3 = {1,  1,  0};
-    plane_1->x4 = {-1, 1,  0};
+    plane_1->x2 = {1, -1, 1};
+    plane_1->x3 = {1, 1, 0};
+    plane_1->x4 = {-1, 1, 0};
     plane_1->c = {0, 0, 1};
     planes.push_back(plane_1);
     auto *plane_2 = new plane_structure();
     plane_2->x1 = {1, 1, 0};
-    plane_2->x2 = {-1,  1, 0};
-    plane_2->x3 = {-1,  2,  0};
-    plane_2->x4 = {1, 2,  0};
+    plane_2->x2 = {-1, 1, 0};
+    plane_2->x3 = {-1, 2, 0};
+    plane_2->x4 = {1, 2, 0};
     plane_2->c = {0, 1, 0};
     planes.push_back(plane_2);
     auto *plane_3 = new plane_structure();
-    plane_3->x1 = {-1,  1,  0};
-    plane_3->x2 = {1, 2,  0};
-    plane_3->x3 = {1, 2,  1};
-    plane_3->x4 = {-1,  1,  1};
+    plane_3->x1 = {-1, 1, 0};
+    plane_3->x2 = {1, 2, 0};
+    plane_3->x3 = {1, 2, 1};
+    plane_3->x4 = {-1, 1, 1};
     plane_3->c = {1, 0, 0};
     planes.push_back(plane_3);
+    auto *sphere_1 = new sphere_structure();
+    sphere_1->p = {-0.3f, 1, 0};
+    sphere_1->r = 1;
+    sphere_1->c = {1, 1, 0};
+    spheres.push_back(sphere_1);
 }
 
 void scene_structure::display_frame() {
@@ -81,15 +58,11 @@ void scene_structure::display_frame() {
         draw(global_frame, environment);
     timer.update();
 
-    // Create a new particle if needed
-//    emit_particle();
-
     // Call the simulation of the particle system
     float const dt = 0.01f * timer.scale;
-    simulate(ball, planes, dt);
+    simulate(ball, planes, spheres, dt);
     sphere_display();
     plane_display();
-//    draw(plane, environment);
     // Display the result
     if (gui.display_frame)
         draw(global_frame, environment);
@@ -101,45 +74,22 @@ void scene_structure::sphere_display() {
     sphere.model.translation = ball.p;
     sphere.model.scaling = ball.r;
     draw(sphere, environment);
-
-    // Display the box in which the particles should stay
-    draw(cube_wireframe, environment);
+    for (auto &sphere_struct: spheres) {
+        sphere.material.color = sphere_struct->c;
+        sphere.model.translation = sphere_struct->p;
+        sphere.model.scaling = sphere_struct->r;
+        draw(sphere, environment);
+    }
 }
 
 void scene_structure::plane_display() {
     for (auto &plane_struct: planes) {
-//        vec3 offset = {0.5f * plane_struct->s, 0.5f * plane_struct->s, 0.0f};
-//        plane.model.translation = plane_struct->p - offset;
-//        plane.model.scaling = plane_struct->s;
-        plane.initialize_data_on_gpu(mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
+        plane.initialize_data_on_gpu(
+                mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
         plane.material.color = plane_struct->c;
-        // rotation ???
         draw(plane, environment);
     }
 }
-
-/*void scene_structure::emit_particle() {
-    // Emit particle with random velocity
-    //  Assume first that all particles have the same radius and mass
-    static numarray<vec3> const color_lut = {{1, 0, 0},
-                                             {0, 1, 0},
-                                             {0, 0, 1},
-                                             {1, 1, 0},
-                                             {1, 0, 1},
-                                             {0, 1, 1}};
-    if (timer.event && gui.add_sphere) {
-        float const theta = rand_interval(0, 2 * Pi);
-        vec3 const v = vec3(1.0f * std::cos(theta), 1.0f * std::sin(theta), 4.0f);
-        particle_structure particle;
-        particle.p = {0, 0, 0};
-        particle.r = 0.08f;
-        particle.c = color_lut[int(rand_interval() * color_lut.size())];
-        particle.v = v;
-        particle.m = 1.0f; //
-
-        particles.push_back(particle);
-    }
-}*/
 
 void scene_structure::display_gui() {
     ImGui::Checkbox("Frame", &gui.display_frame);
@@ -147,7 +97,6 @@ void scene_structure::display_gui() {
     ImGui::SliderFloat("Time to add new sphere", &timer.event_period, 0.05f, 2.0f, "%.2f s");
     ImGui::Checkbox("Add sphere", &gui.add_sphere);
 }
-
 
 void scene_structure::shotBall(particle_structure *ball, float force) {
     // Apply force depending on camera orientation
@@ -165,14 +114,14 @@ void scene_structure::shotBall(particle_structure *ball, float force) {
     std::cout << pos << std::endl;
 }
 
-void scene_structure::set_center_of_rotation(vec3 const& new_center) {
+void scene_structure::set_center_of_rotation(vec3 const &new_center) {
     camera_control.camera_model.center_of_rotation = new_center;
 }
-
 
 vec3 lerp(vec3 start, vec3 end, float factor) {
     return start + factor * (end - start);
 }
+
 const float desiredDistanceBehindBall = 5.0f;
 const float timeAhead = 2.0f;
 const float smoothFactor = 0.1f; // Ajustez cette valeur pour rendre la transition plus rapide ou plus lente
@@ -181,7 +130,7 @@ vec3 smooth_interpolate(vec3 current, vec3 target, float factor) {
     return current + factor * (target - current);
 }
 
-void scene_structure::follow_ball(vec3 const& ball_position) {
+void scene_structure::follow_ball(vec3 const &ball_position) {
 
     // Calculez un point derrière la balle basé sur sa vitesse
     vec3 cameraOffset = -normalize(ball.v) * desiredDistanceBehindBall;
@@ -190,14 +139,11 @@ void scene_structure::follow_ball(vec3 const& ball_position) {
 
     // Interpolation lisse entre la position actuelle de la caméra et la position cible
     vec3 newCameraPosition = smooth_interpolate(ball_position, targetCameraPosition, smoothFactor);
-    newCameraPosition += vec3{3, 3, 2 }; // Ajoutez un peu de hauteur pour que la caméra ne soit pas dans le sol
+    newCameraPosition += vec3{3, 3, 2}; // Ajoutez un peu de hauteur pour que la caméra ne soit pas dans le sol
     // Faites pointer la caméra vers la balle ou légèrement en avant
     vec3 lookAtPoint = ball_position + ball.v;
-
     camera_control.camera_model.look_at(newCameraPosition, lookAtPoint);
 }
-
-
 
 void scene_structure::mouse_move_event() {
     if (!inputs.keyboard.shift)

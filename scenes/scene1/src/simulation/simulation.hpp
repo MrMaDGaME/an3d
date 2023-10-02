@@ -19,4 +19,10 @@ struct plane_structure {
     cgp::vec3 c;    // Color
 };
 
-void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, float dt);
+struct sphere_structure {
+    cgp::vec3 p; // Position
+    cgp::vec3 c; // Color
+    float r;     // Radius
+};
+
+void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, const std::vector<sphere_structure *> &spheres, float dt);

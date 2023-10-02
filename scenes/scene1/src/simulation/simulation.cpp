@@ -2,7 +2,7 @@
 
 using namespace cgp;
 
-void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, float dt) {
+void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, const std::vector<sphere_structure *> &spheres, float dt) {
     vec3 const g = {0, 0, -9.81f};
     vec3 const f = particle.m * g;
     particle.v = (1 - 0.9f * dt) * particle.v + dt * f;
@@ -35,6 +35,16 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
 //            particle.p = {0, 0, 1};
 //            particle.v = {0, 0, 0};
+        }
+    }
+
+    for (auto &sphere: spheres) {
+        vec3 normal = particle.p - sphere->p;
+        float d = norm(normal);
+        if (d < particle.r + sphere->r) {
+            normal = normal / d;
+            particle.p = particle.p + (particle.r + sphere->r - d) * normal;
+            particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
         }
     }
 
