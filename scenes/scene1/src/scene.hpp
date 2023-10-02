@@ -37,6 +37,7 @@ struct scene_structure : scene_inputs_generic {
 	cgp::mesh_drawable sphere;
     cgp::mesh_drawable plane;
 	cgp::curve_drawable cube_wireframe;
+	cgp::skybox_drawable skybox;
     std::vector<plane_structure*> ground;
 
 
@@ -47,6 +48,8 @@ struct scene_structure : scene_inputs_generic {
 	void initialize();    // Standard initialization to be called before the animation loop
 	void display_frame(); // The frame display to be called within the animation loop
 	void display_gui();   // The display of the GUI, also called within the animation loop
+
+	void shotBall(particle_structure* ball);
 
 	void mouse_move_event();
 	void mouse_click_event();
