@@ -140,18 +140,9 @@ void scene_structure::shotBall(particle_structure *ball, float force) {
     auto orientation = camera_control.camera_model.orientation();
 
     // Calculte the angle between the camera and the ball
-    auto angle = std::acos(dot(normalize(ball->p - pos), normalize(ball->v)));
+    //auto angle = std::acos(dot(normalize(ball->p - pos), normalize(ball->v)));
 
-    // Calculate the force to apply to the ball depending on the angle
-    auto forceToApply = force * std::sin(angle);
-
-    // Apply force depending on camera orientation
-    // Ball is shot in the opposite direction of the camera orientation
-    // Ball should make a curve in the air
-
-    // Apply force depending on camera orientation
-    
-
+    ball->v = -force * orientation * vec3(0, 0, 1);
     ball->c = {1, 0, 0};
     ball->m = 1.0f;  
     // Make the camera look at the ball
