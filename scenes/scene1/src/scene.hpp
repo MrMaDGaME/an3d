@@ -39,6 +39,7 @@ struct scene_structure : scene_inputs_generic {
 	cgp::curve_drawable cube_wireframe;
     std::vector<plane_structure*> planes;
     std::vector<sphere_structure*> spheres;
+    std::vector<moving_sphere_structure*> moving_spheres;
 	cgp::skybox_drawable skybox;
 
 

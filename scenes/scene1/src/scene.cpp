@@ -43,11 +43,14 @@ void scene_structure::initialize() {
     plane_3->x4 = {-1, 1, 1};
     plane_3->c = {1, 0, 0};
     planes.push_back(plane_3);
-    auto *sphere_1 = new sphere_structure();
+    auto *sphere_1 = new moving_sphere_structure();
     sphere_1->p = {-0.3f, 1, 0};
-    sphere_1->r = 1;
+    sphere_1->r = 0.5f;
     sphere_1->c = {1, 1, 0};
-    spheres.push_back(sphere_1);
+    sphere_1->amp = 0.01f;
+    sphere_1->hz = 2.0f;
+    sphere_1->axis = {0, 0, 1};
+    moving_spheres.push_back(sphere_1);
 }
 
 void scene_structure::display_frame() {
@@ -60,7 +63,7 @@ void scene_structure::display_frame() {
 
     // Call the simulation of the particle system
     float const dt = 0.01f * timer.scale;
-    simulate(ball, planes, spheres, dt);
+    simulate(ball, planes, spheres, moving_spheres, dt);
     sphere_display();
     plane_display();
     // Display the result
@@ -78,6 +81,12 @@ void scene_structure::sphere_display() {
         sphere.material.color = sphere_struct->c;
         sphere.model.translation = sphere_struct->p;
         sphere.model.scaling = sphere_struct->r;
+        draw(sphere, environment);
+    }
+    for (auto &moving_sphere_struct: moving_spheres) {
+        sphere.material.color = moving_sphere_struct->c;
+        sphere.model.translation = moving_sphere_struct->p;
+        sphere.model.scaling = moving_sphere_struct->r;
         draw(sphere, environment);
     }
 }

@@ -2,7 +2,9 @@
 
 using namespace cgp;
 
-void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes, const std::vector<sphere_structure *> &spheres, float dt) {
+void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes,
+              const std::vector<sphere_structure *> &spheres,
+              const std::vector<moving_sphere_structure *> &moving_spheres, float dt) {
     vec3 const g = {0, 0, -9.81f};
     vec3 const f = particle.m * g;
     particle.v = (1 - 0.9f * dt) * particle.v + dt * f;
@@ -17,7 +19,7 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
         vec3 normal = cross(ab, ac);
         normal = normal / norm(normal);
         float d = dot(normal, particle.p - plane->x1);
-        if (d < 0){
+        if (d < 0) {
             normal = -normal;
             d = -d;
         }
@@ -37,7 +39,6 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
 //            particle.v = {0, 0, 0};
         }
     }
-
     for (auto &sphere: spheres) {
         vec3 normal = particle.p - sphere->p;
         float d = norm(normal);
@@ -47,7 +48,20 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
         }
     }
-
+    for (auto &moving_sphere: moving_spheres) {
+        moving_sphere->t += moving_sphere->hz * dt;
+        if (moving_sphere->t > 2 * M_PI) {
+            moving_sphere->t -= 2 * M_PI;
+        }
+        moving_sphere->p = moving_sphere->p + moving_sphere->amp * sin(moving_sphere->t) * moving_sphere->axis;
+        vec3 normal = particle.p - moving_sphere->p;
+        float d = norm(normal);
+        if (d < particle.r + moving_sphere->r) {
+            normal = normal / d;
+            particle.p = particle.p + (particle.r + moving_sphere->r - d) * normal;
+            particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
+        }
+    }
     if (particle.p.z < -6) {
         particle.p = {0, 0, 1};
         particle.v = {0, 0, 0};
