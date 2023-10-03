@@ -10,8 +10,7 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
     particle.v = (1 - 0.9f * dt) * particle.v + dt * f;
     particle.p = particle.p + dt * particle.v;
 
-    // To do :
-    //  Handle collision
+    // Collision
 
     for (auto &plane: planes) {
         vec3 ab = plane->x2 - plane->x1;
@@ -24,8 +23,8 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             d = -d;
         }
 
-        float detX = 0;
-        float detY = 0;
+        float detX;
+        float detY;
 
         vec3 proj = particle.p - d * normal - plane->x1;
         float detA = ab.x * ac.y - ab.y * ac.x;
@@ -45,8 +44,6 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             detX = proj.x * ac.y - proj.y * ac.x;
             detY = ab.x * proj.y - ab.y * proj.x;
         }
-        
-
         // Calcul des coefficients x et y
         float x = detX / detA;
         float y = detY / detA;
@@ -57,17 +54,8 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             continue;
         }
         if (d < particle.r) {
-            if (plane->c.x != 1 && plane->c.z != 1){
-                std::cout << ab << std::endl;
-                std::cout << ac << std::endl;
-                std::cout << detA << std::endl;
-            }
-                
-
             particle.p = particle.p + (particle.r - d) * normal;
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
-//            particle.p = {0, 0, 1};
-//            particle.v = {0, 0, 0};
         }
     }
     for (auto &sphere: spheres) {
