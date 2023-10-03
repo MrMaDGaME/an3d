@@ -2,6 +2,20 @@
 
 using namespace cgp;
 
+void AddPlane(std::vector<plane_structure*>& planes,
+              const std::vector<vec3>& vertices,
+              const vec3& color) {
+    auto *plane = new plane_structure();
+    plane->x1 = vertices[0];
+    plane->x2 = vertices[1];
+    plane->x3 = vertices[2];
+    plane->x4 = vertices[3];
+    plane->c = color;
+    planes.push_back(plane);
+}
+
+
+
 void scene_structure::initialize() {
     camera_control.initialize(inputs,
                               window); // Give access to the inputs and window global state to the camera controler
@@ -17,40 +31,36 @@ void scene_structure::initialize() {
     skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],
                                              image_grid[4]);
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
-    ball.p = {0, 0, 1};
+    ball.p = {8, 24, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
     ball.v = {0, 0, 0};
     ball.m = 1.0f;
-    auto *plane_1 = new plane_structure();
-    plane_1->x1 = {-1, -1, 1};
-    plane_1->x2 = {1, -1, 1};
-    plane_1->x3 = {1, 1, 0};
-    plane_1->x4 = {-1, 1, 0};
-    plane_1->c = {0, 0, 1};
-    planes.push_back(plane_1);
-    auto *plane_2 = new plane_structure();
-    plane_2->x1 = {1, 1, 0};
-    plane_2->x2 = {-1, 1, 0};
-    plane_2->x3 = {-1, 2, 0};
-    plane_2->x4 = {1, 2, 0};
-    plane_2->c = {0, 1, 0};
-    planes.push_back(plane_2);
-    auto *plane_3 = new plane_structure();
-    plane_3->x1 = {-1, 1, 0};
-    plane_3->x2 = {1, 2, 0};
-    plane_3->x3 = {1, 2, 1};
-    plane_3->x4 = {-1, 1, 1};
-    plane_3->c = {1, 0, 0};
-    planes.push_back(plane_3);
-    auto *sphere_1 = new moving_sphere_structure();
-    sphere_1->p = {-0.3f, 1, 0};
-    sphere_1->r = 0.5f;
-    sphere_1->c = {1, 1, 0};
-    sphere_1->amp = 0.01f;
-    sphere_1->hz = 2.0f;
-    sphere_1->axis = {0, 0, 1};
-    moving_spheres.push_back(sphere_1);
+
+    AddPlane(planes, {{-1, -1, 0.5}, {1, -1, 0.5}, {1, 1, 0.5}, {-1, 1, 0.5}}, {0, 0, 1}); // Spawn plane
+    AddPlane(planes, {{-1, -1, 0.75}, {-1, 1, 0.75}, {-1, 1, 0.5}, {-1, -1, 0.5}}, {0, 1, 0}); // Left wall
+    AddPlane(planes, {{-1, -1, 0.5}, {-1, -1, 0.75}, {1, -1, 0.75}, {1, -1, 0.5}}, {0, 1, 0}); // Back wall
+    AddPlane(planes, {{1, -1, 0.75}, {1, 1, 0.75}, {1, 1, 0.5}, {1, -1, 0.5}}, {0, 1, 0}); // Right wall
+    AddPlane(planes, {{1, 1, 0.5}, {-1, 1, 0.5}, {-1, 2, 0}, {1, 2, 0}}, {0, 0, 1}); // Pente
+    AddPlane(planes, {{-1, 2, 0}, {1, 2, 0}, {1, 8, 0}, {-1, 8, 0}}, {1, 0, 1}); // Floor
+    AddPlane(planes, {{1, 8, 0}, {-9, 8, 0}, {-9, 10, 0}, {1, 10, 0}}, {1, 0.7, 0}); // Corner1_1
+    AddPlane(planes, {{-7, 10, 0}, {-9, 10, 0}, {-9, 13, 0}, {-7, 13, 0}}, {1, 0.6, 0}); // Corner1_2
+    AddPlane(planes, {{-8.25, 13, 0}, {-7.75, 13, 0}, {-7.75, 15, 0}, {-8.25, 15, 0}}, {1, 0.5, 0}); // Bridge
+    AddPlane(planes, {{-7, 15, 0}, {-9, 15, 0}, {-9, 17, 0}, {-7, 17, 0}}, {1, 0.4, 0}); // Corner2_1
+    AddPlane(planes, {{-9, 17, 0}, {-9, 19, 0}, {-3, 19, 0}, {-3, 17, 0}}, {1, 0.3, 0}); // Corner2_2
+
+    AddPlane(planes, {{-3, 17, 0}, {-3, 19, 0}, {-1, 19, -0.5}, {-1, 17, -0.5}}, {0, 0, 1}); // Pente originale
+    AddPlane(planes, {{-1, 17, -0.5}, {-1, 19, -0.5}, {1, 19, -0.5}, {1, 17, -0.5}}, {0, 0, 1}); // middle scene plane
+    AddPlane(planes, {{1, 17, -0.5}, {1, 19, -0.5}, {3, 19, 0}, {3, 17, 0}}, {0, 0, 1}); // Pente
+
+    AddPlane(planes, {{9, 17, 0}, {9, 19, 0}, {3, 19, 0}, {3, 17, 0}}, {1, 0.3, 0}); // Corner2_2 x = -x
+    AddPlane(planes, {{7, 21, 0}, {9, 21, 0}, {9, 19, 0}, {7, 19, 0}}, {1, 0.4, 0}); // Corner2_1 y = 18 + (18 - y)
+    AddPlane(planes, {{8.25, 23, 0}, {7.75, 23, 0}, {7.75, 21, 0}, {8.25, 21, 0}}, {1, 0.5, 0}); // Bridge
+    AddPlane(planes, {{7, 23, 0}, {9, 23, 0}, {9, 26, 0}, {7, 26, 0}}, {1, 0.6, 0});
+    AddPlane(planes, {{-1, 26, 0}, {9, 26, 0}, {9, 28, 0}, {-1, 28, 0}}, {1, 0.7, 0});
+    AddPlane(planes, {{-1, 28, 0}, {1, 28, 0}, {1, 36, 0}, {-1, 36, 0}}, {1, 0.8, 0});
+    AddPlane(planes, {{1, 36, 0}, {-1, 36, 0}, {-1, 37, 0.5}, {1, 37, 0.5}}, {0, 0, 1}); // Pente
+    AddPlane(planes, {{1, 37, 0.5}, {-1, 37, 0.5}, {-1, 39, 0.5}, {1, 39, 0.5}}, {0, 0, 1}); // Pente
 }
 
 void scene_structure::display_frame() {
