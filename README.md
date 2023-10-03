@@ -60,5 +60,6 @@ Tout comme dans le TP, les collisions entre spheres ont été gérées en compar
 Dans le cas d'une collisions, nous changons la vitesse par son symmetrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond.
 
 ## Gestion de la camera
+Nous avons repris la camera de l'exercice 3 du TP. Nous avons ajouté un déplacement de la caméra lorsque l'on frappe dans la balle et que celle-ci s'immobilise. Cela permet de voir la balle s'éloigner et de pouvoir la suivre pour le tir suivant.
 
 ## Gestion des inputs
