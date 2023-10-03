@@ -32,8 +32,8 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             detA = ab.z * ac.y - ab.y * ac.z;
             if (detA == 0) {
                 detA = ab.x * ac.z - ab.z * ac.x;
-                detX = proj.y * ac.z - proj.z * ac.y;
-                detY = ab.z * proj.x - ab.x * proj.z;
+                detX = proj.x * ac.z - proj.z * ac.x;
+                detY = ab.x * proj.z - ab.z * proj.x;
             }
             else {
                 detX = proj.z * ac.y - proj.y * ac.z;
