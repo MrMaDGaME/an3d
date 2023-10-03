@@ -9,6 +9,7 @@ struct particle_structure {
     cgp::vec3 c; // Color
     float r;     // Radius
     float m;     // mass
+    bool changed = false;
 };
 struct plane_structure {
     // Edges

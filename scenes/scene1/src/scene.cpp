@@ -137,6 +137,11 @@ void scene_structure::display_frame() {
     simulate(ball, planes, spheres, moving_spheres, dt);
     sphere_display();
     plane_display();
+    if (norm(ball.v) < 0.05f && !ball.changed) {
+        follow_ball(ball.p);
+        ball.changed = true;
+    }
+    std::cout << norm(ball.v) << std::endl;
     // Display the result
     if (gui.display_frame)
         draw(global_frame, environment);
@@ -178,7 +183,7 @@ void scene_structure::display_gui() {
     ImGui::Checkbox("Add sphere", &gui.add_sphere);
 }
 
-void scene_structure::shotBall(particle_structure *ball, float force) {
+void scene_structure::shotBall(particle_structure *ball, float force) const {
     // Apply force depending on camera orientation
     // Pos = camera_control.camera_model.position();
     auto pos = camera_control.camera_model.position();
@@ -190,6 +195,7 @@ void scene_structure::shotBall(particle_structure *ball, float force) {
     ball->v = -force * orientation * vec3(0, 0, 1);
     ball->c = {1, 0, 0};
     ball->m = 1.0f;
+    ball->changed = false;
     // Make the camera look at the ball
     std::cout << pos << std::endl;
 }
@@ -213,16 +219,14 @@ vec3 smooth_interpolate(vec3 current, vec3 target, float factor) {
 void scene_structure::follow_ball(vec3 const &ball_position) {
 
     // Calculez un point derrière la balle basé sur sa vitesse
-    vec3 cameraOffset = -normalize(ball.v) * desiredDistanceBehindBall;
+    vec3 cameraOffset = camera_control.camera_model.orientation() * vec3(0,0,1) * desiredDistanceBehindBall;
     vec3 targetCameraPosition = ball_position + cameraOffset;
     targetCameraPosition.z = camera_control.camera_model.position().z;
 
-    // Interpolation lisse entre la position actuelle de la caméra et la position cible
-    vec3 newCameraPosition = smooth_interpolate(ball_position, targetCameraPosition, smoothFactor);
-    newCameraPosition += vec3{3, 3, 2}; // Ajoutez un peu de hauteur pour que la caméra ne soit pas dans le sol
     // Faites pointer la caméra vers la balle ou légèrement en avant
-    vec3 lookAtPoint = ball_position + ball.v;
-    camera_control.camera_model.look_at(newCameraPosition, lookAtPoint);
+    vec3 lookAtPoint = ball_position - targetCameraPosition;
+    camera_control.camera_model.look_at(targetCameraPosition, ball_position);
+    std::cout << "bite" << std::endl;
 }
 
 void scene_structure::mouse_move_event() {
@@ -238,7 +242,6 @@ void scene_structure::keyboard_event() {
     camera_control.action_keyboard(environment.camera_view);
     if (inputs.keyboard.shift) {
         shotBall(&ball, 2.0f);
-        follow_ball(ball.p);
     }
     // Créer un bouton space pour faire sauter la balle
     if (inputs.keyboard.ctrl) {
