@@ -21,16 +21,47 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             normal = -normal;
             d = -d;
         }
+
+        float detX = 0;
+        float detY = 0;
+
         vec3 proj = particle.p - d * normal - plane->x1;
-        float y = (proj.y * ab.x - proj.x * ab.y) / (ac.y * ab.x - ac.x * ab.y);
+        float detA = ab.x * ac.y - ab.y * ac.x;
+        if (detA == 0) {
+            detA = ab.z * ac.y - ab.y * ac.z;
+            if (detA == 0) {
+                detA = ab.x * ac.z - ab.z * ac.x;
+                detX = proj.y * ac.z - proj.z * ac.y;
+                detY = ab.z * proj.x - ab.x * proj.z;
+            }
+            else {
+                detX = proj.z * ac.y - proj.y * ac.z;
+                detY = ab.z * proj.y - ab.y * proj.z;
+            }
+        }
+        else {
+            detX = proj.x * ac.y - proj.y * ac.x;
+            detY = ab.x * proj.y - ab.y * proj.x;
+        }
+        
+
+        // Calcul des coefficients x et y
+        float x = detX / detA;
+        float y = detY / detA;
         if (y < 0 || y > 1) {
             continue;
         }
-        float x = (proj.x - y * ac.x) / ab.x;
         if (x < 0 || x > 1) {
             continue;
         }
         if (d < particle.r) {
+            if (plane->c.x != 1 && plane->c.z != 1){
+                std::cout << ab << std::endl;
+                std::cout << ac << std::endl;
+                std::cout << detA << std::endl;
+            }
+                
+
             particle.p = particle.p + (particle.r - d) * normal;
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
 //            particle.p = {0, 0, 1};
