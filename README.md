@@ -9,7 +9,7 @@ This project is a mini-golf game. The player can move the ball with the mouse an
 
 ### How to play
 * **Select the direction**: Use the mouse to move the camera. The ball will move in the direction of the camera.
-* **Shoot the ball**: Use the `Shift` button to shoot the ball.
+* **Shoot the ball**: Use the `Shift` button to shoot the ball. The longer you press the button, the more powerful the shot will be.
 
 ### How to build
 ```bash
