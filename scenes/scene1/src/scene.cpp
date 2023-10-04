@@ -234,7 +234,6 @@ void scene_structure::display_frame() {
         follow_ball(ball.p);
         ball.changed = true;
     }
-    std::cout << norm(ball.v) << std::endl;
     // Display the result
     if (gui.display_frame)
         draw(global_frame, environment);
@@ -318,9 +317,7 @@ void scene_structure::follow_ball(vec3 const &ball_position) {
     targetCameraPosition.z = camera_control.camera_model.position().z;
 
     // Faites pointer la caméra vers la balle ou légèrement en avant
-    vec3 lookAtPoint = ball_position - targetCameraPosition;
     camera_control.camera_model.look_at(targetCameraPosition, ball_position);
-    std::cout << "bite" << std::endl;
 }
 
 void scene_structure::mouse_move_event() {
