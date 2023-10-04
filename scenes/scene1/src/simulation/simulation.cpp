@@ -4,14 +4,15 @@ using namespace cgp;
 
 void simulate(particle_structure &particle, const std::vector<plane_structure *> &planes,
               const std::vector<sphere_structure *> &spheres,
-              const std::vector<moving_sphere_structure *> &moving_spheres, float dt) {
+              const std::vector<moving_sphere_structure *> &moving_spheres,
+              const std::vector<cylinder_structure *> &cylinders, float dt){
     vec3 const g = {0, 0, -9.81f};
     vec3 const f = particle.m * g;
     particle.v = (1 - 0.9f * dt) * particle.v + dt * f;
     particle.p = particle.p + dt * particle.v;
 
     // Collision
-
+    // Planes
     for (auto &plane: planes) {
         vec3 ab = plane->x2 - plane->x1;
         vec3 ac = plane->x4 - plane->x1;
@@ -58,6 +59,7 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
         }
     }
+    // Spheres
     for (auto &sphere: spheres) {
         vec3 normal = particle.p - sphere->p;
         float d = norm(normal);
@@ -81,6 +83,33 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
         }
     }
+
+    // Cylinders
+    for (auto &cylinder: cylinders) {
+        vec3 v = particle.p - cylinder->p;
+        vec3 proj = cylinder->p + dot(v, cylinder->v) / dot(cylinder->v, cylinder->v) * cylinder->v;
+        vec3 normal = proj - particle.p;
+        float d = norm(normal);
+        float axis;
+        if (cylinder->v.x == 0){
+            if (cylinder->v.y == 0){
+                axis = (proj - cylinder->p).z / cylinder->v.z;
+            }
+            else{
+                axis = (proj - cylinder->p).y / cylinder->v.y;
+            }
+        }
+        else{
+            axis = (proj - cylinder->p).x / cylinder->v.x;
+        }
+        if (d < cylinder->r + particle.r && axis > 0 && axis < 1) {
+            std::cout << "collision" << std::endl;
+            particle.p = particle.p + (particle.r - d) * normal;
+            particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
+        }
+    }
+
+    // Ground
     if (particle.p.z < -6) {
         particle.p = {0, 0, 1};
         particle.v = {0, 0, 0};

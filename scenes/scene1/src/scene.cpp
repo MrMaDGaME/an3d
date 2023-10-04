@@ -21,12 +21,13 @@ void scene_structure::initialize() {
     timer.event_period = 0.5f;
 
     //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
-    image_structure image_skybox_template = image_load_file("../assets/skybox_debug.png");
+    image_structure image_skybox_template = image_load_file("../../assets/skybox_debug.png");
     std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
     skybox.initialize_data_on_gpu();
     skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],
                                              image_grid[4]);
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
+    cylinder.initialize_data_on_gpu(mesh_primitive_cylinder());
     ball.p = {8, 24, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
@@ -80,12 +81,12 @@ void scene_structure::initialize() {
     AddPlane(planes, {{-8,8,0},
                       {-8,8,0.5},
                       {-7,8,0.5},
-                      {-7,8,0}}, {0, 1, 0}); 
+                      {-7,8,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-9,9,0},
                       {-9,9,0.5},
                       {-9,10,0.5},
-                      {-9,10,0}}, {0, 1, 0}); // Corner1 Flat}})       
+                      {-9,10,0}}, {0, 1, 0}); // Corner1 Flat}})
 
     AddPlane(planes, {{-8, 8, 0},
                       {-8, 8, 0.5},
@@ -96,7 +97,7 @@ void scene_structure::initialize() {
                       {-9, 10, 0},
                       {-9, 13, 0},
                       {-7, 13, 0}}, {0, 0, 1}); // Corner1_2
-                      
+
     AddPlane(planes, {{-8.25, 13, 0},
                       {-7.75, 13, 0},
                       {-7.75, 15, 0},
@@ -130,7 +131,7 @@ void scene_structure::initialize() {
                       {-3, 19, 0},
                       {-1, 19, -0.5},
                       {-1, 17, -0.5}}, {0, 0, 1}); // Pente originale
-                      
+
     AddPlane(planes, {{-1, 17, -0.5},
                       {-1, 19, -0.5},
                       {1,  19, -0.5},
@@ -227,10 +228,11 @@ void scene_structure::display_frame() {
 
     // Call the simulation of the particle system
     float const dt = 0.01f * timer.scale;
-    simulate(ball, planes, spheres, moving_spheres, dt);
+    simulate(ball, planes, spheres, moving_spheres, cylinders, dt);
     sphere_display();
     plane_display();
-    if (norm(ball.v) < 0.05f && !ball.changed) {
+    cylinder_display();
+    if (norm(ball.v) < 0.07f && !ball.changed) {
         follow_ball(ball.p);
         ball.changed = true;
     }
@@ -265,6 +267,16 @@ void scene_structure::plane_display() {
                 mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
         plane.material.color = plane_struct->c;
         draw(plane, environment);
+        plane.clear();
+    }
+}
+
+void scene_structure::cylinder_display(){
+    for (auto &cylinder_struct: cylinders) {
+        cylinder.initialize_data_on_gpu(mesh_primitive_cylinder(cylinder_struct->r, cylinder_struct->p, cylinder_struct->p + cylinder_struct->v));
+        cylinder.material.color = cylinder_struct->c;
+        draw(cylinder, environment);
+        cylinder.clear();
     }
 }
 
@@ -331,12 +343,8 @@ void scene_structure::mouse_click_event() {
 
 void scene_structure::keyboard_event() {
     camera_control.action_keyboard(environment.camera_view);
-    if (inputs.keyboard.shift) {
+    if (inputs.keyboard.shift && norm(ball.v) < 0.07f) {
         shotBall(&ball, 10.0f);
-    }
-    // Créer un bouton space pour faire sauter la balle
-    if (inputs.keyboard.ctrl) {
-        shotBall(&ball, 15.0f);
     }
 }
 
