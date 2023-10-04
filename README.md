@@ -9,7 +9,7 @@ This project is a mini-golf game. The player can move the ball with the mouse an
 
 ### How to play
 * **Select the direction**: Use the mouse to move the camera. The ball will move in the direction of the camera.
-* **Shoot the ball**: Use the `Shift` button to shoot the ball.
+* **Shoot the ball**: Use the `Shift` button to shoot the ball. The longer you press the button, the more powerful the shot will be.
 
 ### How to build
 ```bash
@@ -38,7 +38,7 @@ La scène est composée des élements suivants:
 * Plusieurs virages à 90° avec des murs en diagonale pour pouvoir rebondir dessus et arriver à la cible en moins de coups
 * Un creux qui necessite une certaine puissance pour pouvoir en sortir
 * Plusieurs obstacles mobiles qui demandent de tirer au bon moment, ajoutant de la difficulté au jeu
-* Une cible qui termine le niveau
+* Une cible qui termine le niveau et nous teleporte au debut du niveau suivant
 
 ## Gestion des mouvements
 ### Mouvement de la balle
@@ -61,7 +61,7 @@ Tout comme dans le TP, les collisions entre spheres ont été gérées en compar
 Pour les cylindres, nous avons utilisé le même principe que pour les murs. Nous avons calculé la distance entre le centre de la balle et l'axe sur lequel se trouve le cylindre grâce à un projeté orthogonal. Si cette distance est inférieure à la somme du rayon de la balle et du rayon du cylindre, alors il y a collision. De plus, nous avons ajouté une condition pour savoir si la balle est dans la hauteur du cylindre. Pour cela, nous utlisons le projeté othogonal calculé précedemment et le comparons avec l'axe du cylindre. Si le produit scalaire est compris entre 0 et la hauteur du cylindre, alors la balle est dans la hauteur du cylindre. 
 
 
-Dans le cas d'une collisions, nous changons la vitesse par son symmetrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond.
+Dans le cas d'une collisions, nous changons la vitesse par son symmetrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond. De plus, nous teleportons la balle à la position de la collision pour éviter qu'elle ne reste coincée dans un objet.
 
 ## Gestion de la camera
 Nous avons repris la camera de l'exercice 3 du TP. Nous avons ajouté un déplacement de la caméra lorsque l'on frappe dans la balle et que celle-ci s'immobilise. Cela permet de voir la balle s'éloigner et de pouvoir la suivre pour le tir suivant.
