@@ -21,7 +21,7 @@ void scene_structure::initialize() {
     timer.event_period = 0.5f;
 
     //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
-    image_structure image_skybox_template = image_load_file("../../assets/skybox_debug.png");
+    image_structure image_skybox_template = image_load_file("../assets/skybox_debug.png");
     std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
     skybox.initialize_data_on_gpu();
     skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],
@@ -55,36 +55,87 @@ void scene_structure::initialize() {
     AddPlane(planes, {{-1, 2, 0},
                       {1,  2, 0},
                       {1,  8, 0},
-                      {-1, 8, 0}}, {1, 0, 1}); // Floor
+                      {-1, 8, 0}}, {0, 0, 1}); // Floor
+
     AddPlane(planes, {{1,  8,  0},
                       {-9, 8,  0},
                       {-9, 10, 0},
-                      {1,  10, 0}}, {1, 0.7, 0}); // Corner1_1
+                      {1,  10, 0}}, {0, 0, 1}); // Corner1_1
+
+    AddPlane(planes, {{0,10,0},
+                      {0,10,0.5f},
+                      {-1,10,0.5f},
+                      {-1,10,0}}, {0, 1, 0}); // Corner1 Flat
+
+    AddPlane(planes, {{1,9,0},
+                        {1,9,0.5f},
+                      {1,8,0.5f},
+                      {1,8,0}}, {0, 1, 0}); // Corner1 Flat
+
+    AddPlane(planes, {{0,10,0},
+                      {0,10,0.5},
+                      {1,9,0.5},
+                      {1,9,0}}, {0, 1, 0}); // Corner1 Flat
+
+    AddPlane(planes, {{-8,8,0},
+                      {-8,8,0.5},
+                      {-7,8,0.5},
+                      {-7,8,0}}, {0, 1, 0}); 
+
+    AddPlane(planes, {{-9,9,0},
+                      {-9,9,0.5},
+                      {-9,10,0.5},
+                      {-9,10,0}}, {0, 1, 0}); // Corner1 Flat}})       
+
+    AddPlane(planes, {{-8, 8, 0},
+                      {-8, 8, 0.5},
+                      {-9, 9, 0.5},
+                      {-9, 9, 0}}, {0, 1, 0}); // Corner2 Flat
+
     AddPlane(planes, {{-7, 10, 0},
                       {-9, 10, 0},
                       {-9, 13, 0},
-                      {-7, 13, 0}}, {1, 0.6, 0}); // Corner1_2
+                      {-7, 13, 0}}, {0, 0, 1}); // Corner1_2
+                      
     AddPlane(planes, {{-8.25, 13, 0},
                       {-7.75, 13, 0},
                       {-7.75, 15, 0},
-                      {-8.25, 15, 0}}, {1, 0.5, 0}); // Bridge
+                      {-8.25, 15, 0}}, {0, 0, 1}); // Bridge
     AddPlane(planes, {{-7, 15, 0},
                       {-9, 15, 0},
                       {-9, 17, 0},
-                      {-7, 17, 0}}, {1, 0.4, 0}); // Corner2_1
+                      {-7, 17, 0}}, {0, 0, 1}); // Corner2_1
+
     AddPlane(planes, {{-9, 17, 0},
                       {-9, 19, 0},
                       {-3, 19, 0},
-                      {-3, 17, 0}}, {1, 0.3, 0}); // Corner2_2
+                      {-3, 17, 0}}, {0, 0, 1}); // Corner2_2
+
+    AddPlane(planes, {{-9, 18,0},
+                      {-9,18,0.5},
+                      {-8,19,0.5},
+                      {-8,19,0}}, {0, 1, 0});
+
+    AddPlane(planes, {{-9,18,0},
+                      {-9,18,0.5},
+                      {-9,17,0.5},
+                      {-9,17,0}}, {0, 1, 0});
+
+    AddPlane(planes, {{-8,19,0},
+                      {-8,19,0.5},
+                      {-7,19,0.5},
+                      {-7,19,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-3, 17, 0},
                       {-3, 19, 0},
                       {-1, 19, -0.5},
                       {-1, 17, -0.5}}, {0, 0, 1}); // Pente originale
+                      
     AddPlane(planes, {{-1, 17, -0.5},
                       {-1, 19, -0.5},
                       {1,  19, -0.5},
                       {1,  17, -0.5}}, {0, 0, 1}); // middle scene plane
+
     AddPlane(planes, {{1, 17, -0.5},
                       {1, 19, -0.5},
                       {3, 19, 0},
@@ -93,35 +144,77 @@ void scene_structure::initialize() {
     AddPlane(planes, {{9, 17, 0},
                       {9, 19, 0},
                       {3, 19, 0},
-                      {3, 17, 0}}, {1, 0.3, 0}); // Corner2_2 x = -x
+                      {3, 17, 0}}, {0, 0, 1}); // Corner2_2 x = -x
+
     AddPlane(planes, {{7, 21, 0},
                       {9, 21, 0},
                       {9, 19, 0},
-                      {7, 19, 0}}, {1, 0.4, 0}); // Corner2_1 y = 18 + (18 - y)
+                      {7, 19, 0}}, {0, 0, 1}); // Corner2_1 y = 18 + (18 - y)
+
+
+    AddPlane(planes, {{7,17,0}, {7,17,0.5}, {8,17,0.5},{8,17,0}}, {0, 1, 0});
+    AddPlane(planes, {{8,17,0}, {8,17,0.5},{9,18,0.5},{9,18,0}}, {0, 1, 0});
+    AddPlane(planes, {{9,18,0}, {9,18,0.5},{9,19,0.5},{9,19,0}}, {0, 1, 0});
+
+
     AddPlane(planes, {{8.25, 23, 0},
                       {7.75, 23, 0},
                       {7.75, 21, 0},
-                      {8.25, 21, 0}}, {1, 0.5, 0}); // Bridge
+                      {8.25, 21, 0}}, {0, 0, 1}); // Bridge
+
     AddPlane(planes, {{7, 23, 0},
                       {9, 23, 0},
                       {9, 26, 0},
-                      {7, 26, 0}}, {1, 0.6, 0});
+                      {7, 26, 0}}, {0, 0, 1});
+
+
+    AddPlane(planes, {{9,27,0},
+                        {9,27,0.5},
+                        {8,28,0.5},
+                        {8,28,0}}, {0, 1, 0});
+
+    AddPlane(planes, {{9,27,0},
+                        {9,27,0.5},
+                        {9,26,0.5},
+                        {9,26,0}}, {0, 1, 0});
+
+    AddPlane(planes, {{8,28,0},
+                        {8,28,0.5},
+                        {7,28,0.5},
+                        {7,28,0}}, {0, 1, 0});
+
     AddPlane(planes, {{-1, 26, 0},
                       {9,  26, 0},
                       {9,  28, 0},
-                      {-1, 28, 0}}, {1, 0.7, 0});
+                      {-1, 28, 0}}, {0, 0, 1});
+
+    AddPlane(planes, {{1,26,0}, {1,26,0.5},{0,26,0.5},{0,26,0}}, {0, 1, 0});
+    AddPlane(planes, {{0,26,0}, {0,26,0.5},{-1,27,0.5},{-1,27,0}}, {0, 1, 0});
+    AddPlane(planes, {{-1,27,0}, {-1,27,0.5},{-1,28,0.5},{-1,28,0}}, {0, 1, 0});
+
     AddPlane(planes, {{-1, 28, 0},
                       {1,  28, 0},
                       {1,  36, 0},
-                      {-1, 36, 0}}, {1, 0.8, 0});
+                      {-1, 36, 0}}, {0, 0, 1});
+
     AddPlane(planes, {{1,  36, 0},
                       {-1, 36, 0},
                       {-1, 37, 0.5},
                       {1,  37, 0.5}}, {0, 0, 1}); // Pente
+
     AddPlane(planes, {{1,  37, 0.5},
                       {-1, 37, 0.5},
                       {-1, 39, 0.5},
                       {1,  39, 0.5}}, {0, 0, 1}); // Pente
+
+    auto *moving_sphere1 = new moving_sphere_structure();
+    moving_sphere1->p = {-1, 4, 0};
+    moving_sphere1->c = {0, 1, 0};
+    moving_sphere1->r = 0.3f;
+    moving_sphere1->hz = 1.0f;
+    moving_sphere1->amp = 0.01f;
+    moving_sphere1->axis = {1,0,0};
+    moving_spheres.push_back(moving_sphere1);
 }
 
 void scene_structure::display_frame() {
@@ -193,6 +286,7 @@ void scene_structure::shotBall(particle_structure *ball, float force) const {
     //auto angle = std::acos(dot(normalize(ball->p - pos), normalize(ball->v)));
 
     ball->v = -force * orientation * vec3(0, 0, 1);
+    ball->v.z = 0;
     ball->c = {1, 0, 0};
     ball->m = 1.0f;
     ball->changed = false;
@@ -241,7 +335,7 @@ void scene_structure::mouse_click_event() {
 void scene_structure::keyboard_event() {
     camera_control.action_keyboard(environment.camera_view);
     if (inputs.keyboard.shift) {
-        shotBall(&ball, 2.0f);
+        shotBall(&ball, 10.0f);
     }
     // Créer un bouton space pour faire sauter la balle
     if (inputs.keyboard.ctrl) {
