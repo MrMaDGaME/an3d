@@ -28,6 +28,7 @@ Nous avons d'abord créé tous les objets nécessaires pour faire nortre scènes
 * **Le sol et les murs**: Ce sont des quadrialtères qui sont placés à des positions précises dans la scène.
 * **La balle**: C'est une sphère qui est placée sur la position de départ.
 * **Les obstacles mobiles**: Ce sont des sphères qui sont placées à des positions précises dans la scène. Elles sont mobiles et bougent en fonction du temps. Elles ne peuvent pas être bougées par le joueur.
+* **Les cylindres**: Ce sont des cylindres qui sont placés à des positions précises dans la scène. Ils ne peuvent pas être bougés par le joueur.
 
 ## Création de la scène
 Nous avons ensuite créé la scène. Nous avons donc placé les objets dans la scène et nous avons ajouté des couleurs pour un rendu visuel plus agréable.
@@ -55,6 +56,9 @@ Nos murs étant des quadrilatères définis uniquement par les coordonnées de l
 
 ### Collision avec les spheres
 Tout comme dans le TP, les collisions entre spheres ont été gérées en comparant la distance entre les centres des deux spheres avec la somme de leurs rayons. Si la distance est inférieure à la somme des rayons, alors les deux spheres sont en collision.
+
+### Collision avec les cylindres
+Pour les cylindres, nous avons utilisé le même principe que pour les murs. Nous avons calculé la distance entre le centre de la balle et l'axe sur lequel se trouve le cylindre grâce à un projeté orthogonal. Si cette distance est inférieure à la somme du rayon de la balle et du rayon du cylindre, alors il y a collision. De plus, nous avons ajouté une condition pour savoir si la balle est dans la hauteur du cylindre. Pour cela, nous utlisons le projeté othogonal calculé précedemment et le comparons avec l'axe du cylindre. Si le produit scalaire est compris entre 0 et la hauteur du cylindre, alors la balle est dans la hauteur du cylindre. 
 
 
 Dans le cas d'une collisions, nous changons la vitesse par son symmetrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond.

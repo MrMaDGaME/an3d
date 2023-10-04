@@ -36,10 +36,12 @@ struct scene_structure : scene_inputs_generic {
 	particle_structure ball;
 	cgp::mesh_drawable sphere;
     cgp::mesh_drawable plane;
+    cgp::mesh_drawable cylinder;
 	cgp::curve_drawable cube_wireframe;
     std::vector<plane_structure*> planes;
     std::vector<sphere_structure*> spheres;
     std::vector<moving_sphere_structure*> moving_spheres;
+    std::vector<cylinder_structure*> cylinders;
 	cgp::skybox_drawable skybox;
 
 
@@ -65,4 +67,6 @@ struct scene_structure : scene_inputs_generic {
 	void sphere_display();
 
     void plane_display();
+
+    void cylinder_display();
 };
