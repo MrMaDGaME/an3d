@@ -21,11 +21,11 @@ void scene_structure::initialize() {
     timer.event_period = 0.5f;
 
     //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
-    image_structure image_skybox_template = image_load_file("../assets/skybox_debug.png");
+    image_structure image_skybox_template = image_load_file("../assets/skybox_02.jpg");
     std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
     skybox.initialize_data_on_gpu();
-    skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],
-                                             image_grid[4]);
+    skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],image_grid[4]);
+
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
     ball.p = {8, 24, 1};
     ball.r = 0.08f;
@@ -35,7 +35,7 @@ void scene_structure::initialize() {
     AddPlane(planes, {{-1, -1, 0.5},
                       {1,  -1, 0.5},
                       {1,  1,  0.5},
-                      {-1, 1,  0.5}}, {0, 0, 1}); // Spawn plane
+                      {-1, 1,  0.5}}, {1, 165/255, 0}); // Spawn plane 
     AddPlane(planes, {{-1, -1, 0.75},
                       {-1, 1,  0.75},
                       {-1, 1,  0.5},
@@ -79,13 +79,13 @@ void scene_structure::initialize() {
 
     AddPlane(planes, {{-8,8,0},
                       {-8,8,0.5},
-                      {-7,8,0.5},
-                      {-7,8,0}}, {0, 1, 0}); 
+                      {-6,8,0.5},
+                      {-6,8,0}}, {0, 1, 0}); 
 
     AddPlane(planes, {{-9,9,0},
                       {-9,9,0.5},
-                      {-9,10,0.5},
-                      {-9,10,0}}, {0, 1, 0}); // Corner1 Flat}})       
+                      {-9,11,0.5},
+                      {-9,11,0}}, {0, 1, 0}); // Corner1 Flat}})       
 
     AddPlane(planes, {{-8, 8, 0},
                       {-8, 8, 0.5},
@@ -118,13 +118,13 @@ void scene_structure::initialize() {
 
     AddPlane(planes, {{-9,18,0},
                       {-9,18,0.5},
-                      {-9,17,0.5},
-                      {-9,17,0}}, {0, 1, 0});
+                      {-9,16,0.5},
+                      {-9,16,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-8,19,0},
                       {-8,19,0.5},
-                      {-7,19,0.5},
-                      {-7,19,0}}, {0, 1, 0});
+                      {-6,19,0.5},
+                      {-6,19,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-3, 17, 0},
                       {-3, 19, 0},
@@ -152,9 +152,9 @@ void scene_structure::initialize() {
                       {7, 19, 0}}, {0, 0, 1}); // Corner2_1 y = 18 + (18 - y)
 
 
-    AddPlane(planes, {{7,17,0}, {7,17,0.5}, {8,17,0.5},{8,17,0}}, {0, 1, 0});
-    AddPlane(planes, {{8,17,0}, {8,17,0.5},{9,18,0.5},{9,18,0}}, {0, 1, 0});
-    AddPlane(planes, {{9,18,0}, {9,18,0.5},{9,19,0.5},{9,19,0}}, {0, 1, 0});
+    AddPlane(planes, {{6,17,0}, {6,17,0.5}, {8,17,0.5},{8,17,0}}, {0, 1, 0});
+    AddPlane(planes, {{8,17,0}, {8,17,0.5}, {9,18,0.5},{9,18,0}}, {0, 1, 0});
+    AddPlane(planes, {{9,18,0}, {9,18,0.5}, {9,20,0.5},{9,20,0}}, {0, 1, 0});
 
 
     AddPlane(planes, {{8.25, 23, 0},
@@ -205,7 +205,22 @@ void scene_structure::initialize() {
     AddPlane(planes, {{1,  37, 0.5},
                       {-1, 37, 0.5},
                       {-1, 39, 0.5},
-                      {1,  39, 0.5}}, {0, 0, 1}); // Pente
+                      {1,  39, 0.5}}, {1, 165/255, 0}); 
+
+    AddPlane(planes, {{1,37,0.5},
+                        {1,37,0.75},
+                        {1,39,0.75},
+                        {1,39,0.5}}, {0, 1, 0});
+    
+    AddPlane(planes, {{-1,37,0.5},
+                        {-1,37,0.75},
+                        {-1,39,0.75},
+                        {-1,39,0.5}}, {0, 1, 0});
+
+    AddPlane(planes, {{1,39,0.5},
+                        {1,39,0.75},
+                        {-1,39,0.75},
+                        {-1,39,0.5}}, {0, 1, 0});
 
     auto *moving_sphere1 = new moving_sphere_structure();
     moving_sphere1->p = {-1, 4, 0};
@@ -215,14 +230,45 @@ void scene_structure::initialize() {
     moving_sphere1->amp = 0.01f;
     moving_sphere1->axis = {1,0,0};
     moving_spheres.push_back(moving_sphere1);
+
+    auto *moving_sphere2 = new moving_sphere_structure();
+    moving_sphere2->p = {1, 6, 0};
+    moving_sphere2->c = {0, 1, 0};
+    moving_sphere2->r = 0.3f;
+    moving_sphere2->hz = 1.0f;
+    moving_sphere2->amp = 0.01f;
+    moving_sphere2->axis = {-1,0,0};
+    moving_spheres.push_back(moving_sphere2);
+
+    auto *moving_sphere3 = new moving_sphere_structure();
+    moving_sphere3->p = {-4, 9, -0.5};
+    moving_sphere3->c = {0, 1, 0};
+    moving_sphere3->r = 0.3f;
+    moving_sphere3->hz = 5.0f;
+    moving_sphere3->amp = 0.02f;
+    moving_sphere3->axis = {0,0,1};
+    moving_spheres.push_back(moving_sphere3);
+    
+    auto *sphere2 = new sphere_structure();
+    sphere2->p = {-4,9.75, 0};
+    sphere2->c = {0, 1, 0};
+    sphere2->r = 0.3f;
+    spheres.push_back(sphere2);
+
+    auto *sphere3 = new sphere_structure();
+    sphere3->p = {-4,8.25, 0};
+    sphere3->c = {0, 1, 0};
+    sphere3->r = 0.3f;
+    spheres.push_back(sphere3);
+
 }
 
 void scene_structure::display_frame() {
     // Set the light to the current position of the camera
     environment.light = camera_control.camera_model.position();
-    //draw(skybox, environment);
-    if (gui.display_frame)
-        draw(global_frame, environment);
+    glDepthMask(GL_FALSE);
+    draw(skybox, environment);
+    glDepthMask(GL_TRUE);
     timer.update();
 
     // Call the simulation of the particle system
@@ -265,6 +311,7 @@ void scene_structure::plane_display() {
                 mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
         plane.material.color = plane_struct->c;
         draw(plane, environment);
+        plane.clear();
     }
 }
 
