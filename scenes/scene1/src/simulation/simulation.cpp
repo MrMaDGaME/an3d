@@ -11,6 +11,11 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
     particle.v = (1 - 0.9f * dt) * particle.v + dt * f;
     particle.p = particle.p + dt * particle.v;
 
+    if (norm(particle.v) < 0.7f && norm(particle.p - vec3(0, 38, 0.5f)) < 0.5f){
+        particle.p = {0, 0, 1};
+        particle.v = {0, 0, 0};
+    }
+
     // Collision
     // Planes
     for (auto &plane: planes) {

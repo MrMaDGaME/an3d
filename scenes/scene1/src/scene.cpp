@@ -21,14 +21,18 @@ void scene_structure::initialize() {
     timer.event_period = 0.5f;
 
     //image_structure image_skybox_template = image_load_file("../assets/skybox_01.jpg");
-    image_structure image_skybox_template = image_load_file("../assets/skybox_02.jpg");
+    #ifdef __APPLE__
+        image_structure image_skybox_template = image_load_file("../../assets/skybox_02.jpg");
+    #elif __linux__
+        image_structure image_skybox_template = image_load_file("../assets/skybox_02.jpg");
+    #endif
     std::vector<image_structure> image_grid = image_split_grid(image_skybox_template, 4, 3);
     skybox.initialize_data_on_gpu();
     skybox.texture.initialize_cubemap_on_gpu(image_grid[1], image_grid[7], image_grid[5], image_grid[3], image_grid[10],image_grid[4]);
 
     sphere.initialize_data_on_gpu(mesh_primitive_sphere());
     cylinder.initialize_data_on_gpu(mesh_primitive_cylinder());
-    ball.p = {8, 24, 1};
+    ball.p = {0, 30, 1};
     ball.r = 0.08f;
     ball.c = {1, 0, 0};
     ball.v = {0, 0, 0};
@@ -36,7 +40,7 @@ void scene_structure::initialize() {
     AddPlane(planes, {{-1, -1, 0.5},
                       {1,  -1, 0.5},
                       {1,  1,  0.5},
-                      {-1, 1,  0.5}}, {1, 165/255, 0}); // Spawn plane 
+                      {-1, 1,  0.5}}, {1, 165/255, 0}); // Spawn plane
     AddPlane(planes, {{-1, -1, 0.75},
                       {-1, 1,  0.75},
                       {-1, 1,  0.5},
@@ -81,12 +85,12 @@ void scene_structure::initialize() {
     AddPlane(planes, {{-8,8,0},
                       {-8,8,0.5},
                       {-6,8,0.5},
-                      {-6,8,0}}, {0, 1, 0}); 
+                      {-6,8,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-9,9,0},
                       {-9,9,0.5},
                       {-9,11,0.5},
-                      {-9,11,0}}, {0, 1, 0}); // Corner1 Flat}})       
+                      {-9,11,0}}, {0, 1, 0}); // Corner1 Flat}})
 
     AddPlane(planes, {{-8, 8, 0},
                       {-8, 8, 0.5},
@@ -206,13 +210,13 @@ void scene_structure::initialize() {
     AddPlane(planes, {{1,  37, 0.5},
                       {-1, 37, 0.5},
                       {-1, 39, 0.5},
-                      {1,  39, 0.5}}, {1, 165/255, 0}); 
+                      {1,  39, 0.5}}, {1, 165/255, 0});
 
     AddPlane(planes, {{1,37,0.5},
                         {1,37,0.75},
                         {1,39,0.75},
                         {1,39,0.5}}, {0, 1, 0});
-    
+
     AddPlane(planes, {{-1,37,0.5},
                         {-1,37,0.75},
                         {-1,39,0.75},
@@ -249,7 +253,7 @@ void scene_structure::initialize() {
     moving_sphere3->amp = 0.02f;
     moving_sphere3->axis = {0,0,1};
     moving_spheres.push_back(moving_sphere3);
-    
+
     auto *sphere2 = new sphere_structure();
     sphere2->p = {-4,9.75, 0};
     sphere2->c = {0, 1, 0};
@@ -333,39 +337,25 @@ void scene_structure::display_gui() {
     ImGui::Checkbox("Add sphere", &gui.add_sphere);
 }
 
-void scene_structure::shotBall(particle_structure *ball, float force) const {
+void scene_structure::shotBall(particle_structure *object, float force) const {
     // Apply force depending on camera orientation
     // Pos = camera_control.camera_model.position();
     auto pos = camera_control.camera_model.position();
     auto orientation = camera_control.camera_model.orientation();
 
-    // Calculte the angle between the camera and the ball
-    //auto angle = std::acos(dot(normalize(ball->p - pos), normalize(ball->v)));
+    // Calculte the angle between the camera and the object
+    //auto angle = std::acos(dot(normalize(object->p - pos), normalize(object->v)));
 
-    ball->v = -force * orientation * vec3(0, 0, 1);
-    ball->v.z = 0;
-    ball->c = {1, 0, 0};
-    ball->m = 1.0f;
-    ball->changed = false;
-    // Make the camera look at the ball
+    object->v = -force * orientation * vec3(0, 0, 1);
+    object->v.z = 0;
+    object->c = {1, 0, 0};
+    object->m = 1.0f;
+    object->changed = false;
+    // Make the camera look at the object
     std::cout << pos << std::endl;
 }
 
-void scene_structure::set_center_of_rotation(vec3 const &new_center) {
-    camera_control.camera_model.center_of_rotation = new_center;
-}
-
-vec3 lerp(vec3 start, vec3 end, float factor) {
-    return start + factor * (end - start);
-}
-
-const float desiredDistanceBehindBall = 5.0f;
-const float timeAhead = 2.0f;
-const float smoothFactor = 0.1f; // Ajustez cette valeur pour rendre la transition plus rapide ou plus lente
-
-vec3 smooth_interpolate(vec3 current, vec3 target, float factor) {
-    return current + factor * (target - current);
-}
+float desiredDistanceBehindBall = 5.0f;
 
 void scene_structure::follow_ball(vec3 const &ball_position) {
 
