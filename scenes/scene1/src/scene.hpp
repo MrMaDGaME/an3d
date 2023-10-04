@@ -43,6 +43,7 @@ struct scene_structure : scene_inputs_generic {
     std::vector<moving_sphere_structure*> moving_spheres;
     std::vector<cylinder_structure*> cylinders;
 	cgp::skybox_drawable skybox;
+	float force = 0.0f;
 
 
 	// ****************************** //

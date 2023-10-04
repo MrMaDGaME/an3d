@@ -262,6 +262,13 @@ void scene_structure::initialize() {
     sphere3->r = 0.3f;
     spheres.push_back(sphere3);
 
+    auto *cylinder1 = new cylinder_structure();
+    cylinder1->p = {-1, 10, 0};
+    cylinder1->c = {0, 1, 0};
+    cylinder1->r = 0.3f;
+    cylinder1->v = {0, 0, 1};
+    cylinders.push_back(cylinder1);
+
 }
 
 void scene_structure::display_frame() {
@@ -347,8 +354,6 @@ void scene_structure::shotBall(particle_structure *ball, float force) const {
     ball->c = {1, 0, 0};
     ball->m = 1.0f;
     ball->changed = false;
-    // Make the camera look at the ball
-    std::cout << pos << std::endl;
 }
 
 void scene_structure::set_center_of_rotation(vec3 const &new_center) {
@@ -388,9 +393,15 @@ void scene_structure::mouse_click_event() {
 }
 
 void scene_structure::keyboard_event() {
+    // if shift is clicked print prout
     camera_control.action_keyboard(environment.camera_view);
     if (inputs.keyboard.shift && norm(ball.v) < 0.07f) {
-        shotBall(&ball, 10.0f);
+        force += 0.1f;
+        force = std::min(force, 10.0f);
+    }
+    if (!inputs.keyboard.shift && norm(ball.v) < 0.07f && force > 0.0f) {
+        shotBall(&ball, force);
+        force = 0.0f;
     }
 }
 

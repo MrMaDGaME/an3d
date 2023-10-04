@@ -103,7 +103,7 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
             axis = (proj - cylinder->p).x / cylinder->v.x;
         }
         if (d < cylinder->r + particle.r && axis > 0 && axis < 1) {
-            std::cout << "collision" << std::endl;
+
             particle.p = particle.p + (particle.r - d) * normal;
             particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
         }
