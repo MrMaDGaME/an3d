@@ -91,28 +91,26 @@ void simulate(particle_structure &particle, const std::vector<plane_structure *>
 
     // Cylinders
     for (auto &cylinder: cylinders) {
-        vec3 v = particle.p - cylinder->p;
-        vec3 proj = cylinder->p + dot(v, cylinder->v) / dot(cylinder->v, cylinder->v) * cylinder->v;
-        vec3 normal = proj - particle.p;
-        float d = norm(normal);
-        float axis;
-        if (cylinder->v.x == 0){
-            if (cylinder->v.y == 0){
-                axis = (proj - cylinder->p).z / cylinder->v.z;
-            }
-            else{
-                axis = (proj - cylinder->p).y / cylinder->v.y;
-            }
-        }
-        else{
-            axis = (proj - cylinder->p).x / cylinder->v.x;
-        }
-        if (d < cylinder->r + particle.r && axis > 0 && axis < 1) {
+    // Assurez-vous que cylinder->v n'est pas un vecteur nul.
+    if (norm(cylinder->v) == 0) continue;
 
-            particle.p = particle.p + (particle.r - d) * normal;
-            particle.v = particle.v - 2 * dot(particle.v, normal) * normal * 0.9f;
-        }
+    vec3 v = particle.p - cylinder->p;
+    vec3 proj = cylinder->p + dot(v, cylinder->v) / dot(cylinder->v, cylinder->v) * cylinder->v;
+    
+    // Inversion de la normale
+    vec3 normal = particle.p - proj;
+    float d = norm(normal);
+
+    // Calcul général de l'axe de vérification
+    float axis = dot(proj - cylinder->p, cylinder->v) / dot(cylinder->v, cylinder->v);
+
+    if (d < cylinder->r + particle.r && axis > 0 && axis < 1) {
+        normal /= d; // Normalise le vecteur normal
+        particle.p += (particle.r + cylinder->r - d) * normal;
+        particle.v -= 2 * dot(particle.v, normal) * normal * 0.9f;
     }
+}
+
 
     // Ground
     if (particle.p.z < -6) {

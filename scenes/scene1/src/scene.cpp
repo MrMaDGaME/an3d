@@ -58,9 +58,9 @@ void scene_structure::initialize() {
                       {-1, 2, 0},
                       {1,  2, 0}}, {0, 0, 1}); // Pente
     AddPlane(planes, {{-1, 2, 0},
-                      {1,  2, 0},
+                      {-1, 8, 0},
                       {1,  8, 0},
-                      {-1, 8, 0}}, {0, 0, 1}); // Floor
+                      {1,  2, 0}}, {0, 0, 1}); // Floor
 
     AddPlane(planes, {{1,  8,  0},
                       {-9, 8,  0},
@@ -106,6 +106,30 @@ void scene_structure::initialize() {
                       {-7.75, 13, 0},
                       {-7.75, 15, 0},
                       {-8.25, 15, 0}}, {0, 0, 1}); // Bridge
+
+    AddPlane(planes, {{-9,13,0},
+                      {-9,13.5,0.25},
+                      {-8.25,13.5,0.25},
+                      {-8.25,13,0}}, {0, 0, 1});
+
+    AddPlane(planes, {{-7.75,13,0},
+                      {-7.75,13.5,0.25},
+                      {-7,13.5,0.25},
+                      {-7,13,0}}, {0, 0, 1});
+    /*auto *cylinder6 = new cylinder_structure(); // slalom
+    cylinder6->p = {-9, 13, 0};
+    cylinder6->c = {0, 1, 0};
+    cylinder6->r = 0.1f;
+    cylinder6->v = {0.75, 0, 0};
+    cylinders.push_back(cylinder6);
+
+    auto *cylinder7 = new cylinder_structure(); // slalom
+    cylinder7->p = {-7, 13, 0};
+    cylinder7->c = {0, 1, 0};
+    cylinder7->r = 0.1f;
+    cylinder7->v = {-0.75, 0, 0};
+    cylinders.push_back(cylinder7);*/
+
     AddPlane(planes, {{-7, 15, 0},
                       {-9, 15, 0},
                       {-9, 17, 0},
@@ -141,36 +165,73 @@ void scene_structure::initialize() {
                       {1,  19, -0.5},
                       {1,  17, -0.5}}, {0, 0, 1}); // middle scene plane
 
+    
+
+
+
     AddPlane(planes, {{1, 17, -0.5},
                       {1, 19, -0.5},
                       {3, 19, 0},
                       {3, 17, 0}}, {0, 0, 1}); // Pente
 
     AddPlane(planes, {{9, 17, 0},
-                      {9, 19, 0},
+                      {3, 17, 0},
                       {3, 19, 0},
-                      {3, 17, 0}}, {0, 0, 1}); // Corner2_2 x = -x
+                      {9, 19, 0}}, {0, 0, 1}); // Corner2_2
+
+    auto *cylinder2 = new cylinder_structure(); // slalom
+    cylinder2->p = {4.45, 18.55, 0};
+    cylinder2->c = {0, 1, 0};
+    cylinder2->r = 0.45f;
+    cylinder2->v = {0, 0, 1};
+    cylinders.push_back(cylinder2);
+
+    auto *cylinder3 = new cylinder_structure(); // slalom
+    cylinder3->p = {5.45, 17.45, 0};
+    cylinder3->c = {0, 1, 0};
+    cylinder3->r = 0.45f;
+    cylinder3->v = {0, 0, 1};
+    cylinders.push_back(cylinder3);
+
+    auto *cylinder4 = new cylinder_structure(); // slalom
+    cylinder4->p = {3.45, 17.45, 0};
+    cylinder4->c = {0, 1, 0};
+    cylinder4->r = 0.45f;
+    cylinder4->v = {0, 0, 1};
+    cylinders.push_back(cylinder4);
+
+    auto *cylinder5 = new cylinder_structure(); // slalom
+    cylinder5->p = {6.45, 18.55, 0};
+    cylinder5->c = {0, 1, 0};
+    cylinder5->r = 0.45f;
+    cylinder5->v = {0, 0, 1};
+    cylinders.push_back(cylinder5);
 
     AddPlane(planes, {{7, 21, 0},
                       {9, 21, 0},
                       {9, 19, 0},
                       {7, 19, 0}}, {0, 0, 1}); // Corner2_1 y = 18 + (18 - y)
 
-
-    AddPlane(planes, {{6,17,0}, {6,17,0.5}, {8,17,0.5},{8,17,0}}, {0, 1, 0});
+    AddPlane(planes, {{3,19,0}, {3,19,0.5}, {7,19,0.5},{7,19,0}}, {0, 1, 0});
+    AddPlane(planes, {{3,17,0}, {3,17,0.5}, {8,17,0.5},{8,17,0}}, {0, 1, 0});
     AddPlane(planes, {{8,17,0}, {8,17,0.5}, {9,18,0.5},{9,18,0}}, {0, 1, 0});
     AddPlane(planes, {{9,18,0}, {9,18,0.5}, {9,20,0.5},{9,20,0}}, {0, 1, 0});
 
 
     AddPlane(planes, {{8.25, 23, 0},
-                      {7.75, 23, 0},
-                      {7.75, 21, 0},
-                      {8.25, 21, 0}}, {0, 0, 1}); // Bridge
+                      {8.25, 21, 0}, 
+                      {7.75, 21, 0},     
+                      {7.75, 23, 0}}, {0, 0, 1}); // Bridge
+
+    AddPlane(planes, {{7,21,0},
+                        {7,22,0.5},
+                        {9,22,0.5},
+                        {9,21,0}}, {0, 0, 1});
 
     AddPlane(planes, {{7, 23, 0},
-                      {9, 23, 0},
+                      {7, 26, 0},
                       {9, 26, 0},
-                      {7, 26, 0}}, {0, 0, 1});
+                      {9, 23, 0}}, {0, 0, 1});
 
 
     AddPlane(planes, {{9,27,0},
@@ -189,18 +250,80 @@ void scene_structure::initialize() {
                         {7,28,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-1, 26, 0},
-                      {9,  26, 0},
-                      {9,  28, 0},
-                      {-1, 28, 0}}, {0, 0, 1});
+                      {-1, 28, 0},
+                      {9,  28, 0},   
+                      {9,  26, 0}}, {0, 0, 1});
+
+    auto *cylinder6 = new cylinder_structure(); // slalom
+    cylinder6->p = {4, 27, 0};
+    cylinder6->c = {0, 1, 0};
+    cylinder6->r = 0.4f;
+    cylinder6->v = {0, 0, 1};
+    cylinders.push_back(cylinder6);
+
+    auto *moving_sphere4 = new moving_sphere_structure();
+    moving_sphere4->p = {3.3, 26.25, 0.3};
+    moving_sphere4->c = {0, 1, 0};
+    moving_sphere4->r = 0.3f;
+    moving_sphere4->hz = 1.0f;
+    moving_sphere4->amp = 0.01f;
+    moving_sphere4->axis = {0,0.7,0};
+    moving_spheres.push_back(moving_sphere4);
+
+    auto *moving_sphere5 = new moving_sphere_structure();
+    moving_sphere5->p = {4.7, 27.75, 0.3};
+    moving_sphere5->c = {0, 1, 0};
+    moving_sphere5->r = 0.3f;
+    moving_sphere5->hz = 1.0f;
+    moving_sphere5->amp = 0.01f;
+    moving_sphere5->axis = {0,-0.7,0};
+    moving_spheres.push_back(moving_sphere5);
+
+    AddPlane(planes, {{5, 28,0},
+                      {5,28,0.5},
+                      {3,28,0.5},
+                      {3,28,0}}, {0, 1, 0});
+
+    AddPlane(planes, {{5,26,0},
+                      {5,26,0.5},
+                      {3,26,0.5},
+                      {3,26,0}}, {0, 1, 0});                  
 
     AddPlane(planes, {{1,26,0}, {1,26,0.5},{0,26,0.5},{0,26,0}}, {0, 1, 0});
     AddPlane(planes, {{0,26,0}, {0,26,0.5},{-1,27,0.5},{-1,27,0}}, {0, 1, 0});
     AddPlane(planes, {{-1,27,0}, {-1,27,0.5},{-1,28,0.5},{-1,28,0}}, {0, 1, 0});
 
     AddPlane(planes, {{-1, 28, 0},
-                      {1,  28, 0},
-                      {1,  36, 0},
-                      {-1, 36, 0}}, {0, 0, 1});
+                        {-1, 36, 0},
+                        {1,  36, 0},   
+                        {1,  28, 0}}, {0, 0, 1});
+
+    auto *moving_sphere6 = new moving_sphere_structure();
+    moving_sphere6->p = {1, 28, 0.3};
+    moving_sphere6->c = {0, 1, 0};
+    moving_sphere6->r = 0.3f;
+    moving_sphere6->hz = 1.0f;
+    moving_sphere6->amp = 0.01f;
+    moving_sphere6->axis = {-1,1,0};
+    moving_spheres.push_back(moving_sphere6);
+
+    auto *moving_sphere7 = new moving_sphere_structure();
+    moving_sphere7->p = {-1, 30, 0.3};
+    moving_sphere7->c = {0, 1, 0};
+    moving_sphere7->r = 0.3f;
+    moving_sphere7->hz = 5.0f;
+    moving_sphere7->amp = 0.1f;
+    moving_sphere7->axis = {0.5,0.5,0};
+    moving_spheres.push_back(moving_sphere7);
+
+    auto *moving_sphere8 = new moving_sphere_structure();
+    moving_sphere8->p = {-1, 34, 0.3};
+    moving_sphere8->c = {0, 1, 0};
+    moving_sphere8->r = 0.3f;
+    moving_sphere8->hz = 1.0f;
+    moving_sphere8->amp = 0.01f;
+    moving_sphere8->axis = {1,-1,0};
+    moving_spheres.push_back(moving_sphere8);
 
     AddPlane(planes, {{1,  36, 0},
                       {-1, 36, 0},
@@ -208,9 +331,9 @@ void scene_structure::initialize() {
                       {1,  37, 0.5}}, {0, 0, 1}); // Pente
 
     AddPlane(planes, {{1,  37, 0.5},
-                      {-1, 37, 0.5},
-                      {-1, 39, 0.5},
-                      {1,  39, 0.5}}, {1, 165/255, 0});
+                       {1,  39, 0.5},
+                       {-1, 39, 0.5},
+                       {-1, 37, 0.5}}, {1, 165/255, 0});
 
     AddPlane(planes, {{1,37,0.5},
                         {1,37,0.75},
@@ -304,13 +427,13 @@ void scene_structure::sphere_display() {
     sphere.model.translation = ball.p;
     sphere.model.scaling = ball.r;
     draw(sphere, environment);
-    for (auto &sphere_struct: spheres) {
+    for (const auto &sphere_struct: spheres) {
         sphere.material.color = sphere_struct->c;
         sphere.model.translation = sphere_struct->p;
         sphere.model.scaling = sphere_struct->r;
         draw(sphere, environment);
     }
-    for (auto &moving_sphere_struct: moving_spheres) {
+    for (const auto &moving_sphere_struct: moving_spheres) {
         sphere.material.color = moving_sphere_struct->c;
         sphere.model.translation = moving_sphere_struct->p;
         sphere.model.scaling = moving_sphere_struct->r;
@@ -319,7 +442,7 @@ void scene_structure::sphere_display() {
 }
 
 void scene_structure::plane_display() {
-    for (auto &plane_struct: planes) {
+    for (const auto &plane_struct: planes) {
         plane.initialize_data_on_gpu(
                 mesh_primitive_quadrangle(plane_struct->x1, plane_struct->x2, plane_struct->x3, plane_struct->x4));
         plane.material.color = plane_struct->c;
@@ -329,7 +452,7 @@ void scene_structure::plane_display() {
 }
 
 void scene_structure::cylinder_display(){
-    for (auto &cylinder_struct: cylinders) {
+    for (const auto &cylinder_struct: cylinders) {
         cylinder.initialize_data_on_gpu(mesh_primitive_cylinder(cylinder_struct->r, cylinder_struct->p, cylinder_struct->p + cylinder_struct->v));
         cylinder.material.color = cylinder_struct->c;
         draw(cylinder, environment);
@@ -346,12 +469,7 @@ void scene_structure::display_gui() {
 
 void scene_structure::shotBall(particle_structure *object, float force) const {
     // Apply force depending on camera orientation
-    // Pos = camera_control.camera_model.position();
-    auto pos = camera_control.camera_model.position();
     auto orientation = camera_control.camera_model.orientation();
-
-    // Calculte the angle between the camera and the object
-    //auto angle = std::acos(dot(normalize(object->p - pos), normalize(object->v)));
 
     object->v = -force * orientation * vec3(0, 0, 1);
     object->v.z = 0;
@@ -383,11 +501,10 @@ void scene_structure::mouse_click_event() {
 }
 
 void scene_structure::keyboard_event() {
-    // if shift is clicked print prout
     camera_control.action_keyboard(environment.camera_view);
     if (inputs.keyboard.shift && norm(ball.v) < 0.07f) {
         force += 0.1f;
-        force = std::min(force, 10.0f);
+        force = std::min(force, 15.0f);
     }
     if (!inputs.keyboard.shift && norm(ball.v) < 0.07f && force > 0.0f) {
         shotBall(&ball, force);
