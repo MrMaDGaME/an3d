@@ -7,6 +7,11 @@
 ### Description
 This project is a mini-golf game. The player can move the ball with the mouse and the keyboard. The goal is to put the ball in the hole with the fewer strokes possible.
 
+![Image 2](./images/screen2.png)
+![Image 3](./images/screen3.png)
+![Image 1](./images/screen1.png)
+
+
 ### How to play
 * **Select the direction**: Use the mouse to move the camera. The ball will move in the direction of the camera.
 * **Shoot the ball**: Use the `Shift` button to shoot the ball. The longer you press the button, the more powerful the shot will be.
