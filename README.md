@@ -66,9 +66,13 @@ Tout comme dans le TP, les collisions entre spheres ont été gérées en compar
 Pour les cylindres, nous avons utilisé le même principe que pour les murs. Nous avons calculé la distance entre le centre de la balle et l'axe sur lequel se trouve le cylindre grâce à un projeté orthogonal. Si cette distance est inférieure à la somme du rayon de la balle et du rayon du cylindre, alors il y a collision. De plus, nous avons ajouté une condition pour savoir si la balle est dans la hauteur du cylindre. Pour cela, nous utlisons le projeté othogonal calculé précedemment et le comparons avec l'axe du cylindre. Si le produit scalaire est compris entre 0 et la hauteur du cylindre, alors la balle est dans la hauteur du cylindre. 
 
 
-Dans le cas d'une collisions, nous changons la vitesse par son symmetrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond. De plus, nous teleportons la balle à la position de la collision pour éviter qu'elle ne reste coincée dans un objet.
+Dans le cas d'une collisions, nous changons la vitesse par son symétrique par rapport à la normale à la surface rencontrée. Cela permet de simuler un rebond. De plus, nous teleportons la balle à la position de la collision pour éviter qu'elle ne reste coincée dans un objet.
 
 ## Gestion de la camera
 Nous avons repris la camera de l'exercice 3 du TP. Nous avons ajouté un déplacement de la caméra lorsque l'on frappe dans la balle et que celle-ci s'immobilise. Cela permet de voir la balle s'éloigner et de pouvoir la suivre pour le tir suivant.
 
 ## Gestion des inputs
+Pour les inputs, nous avons exploités les fonctions de la librairie. Nous avons utilisé la structure gérant les inputs clavier et souris. L'idée est remarquer lorsque la touche shift est pressée, ce qui se fait avec la structure qui utilise GLFW_PRESS et GLFW_RELEASE. A chaque frame, nous regardons si la touche est pressée. Si c'est le cas, nous augmentons la puissance du tir. Si elle est relachée, nous tirons la balle avec la puissance calculée puis nous remettons la puissance à 0. Pour rendre la chose plus facile, nous avons limité la puissance maximale du tir afin de ne pas tirer trop fort, si nous avons enfoncé la touche trop tôt.
+
+## Gestion de la skybox
+Pour la skybox, nous avons utilisé le même procédé que vous avez employé dans votre exemple. Cependant, notre scene n'utilise pas les mêmes axes. Ainsi, pour palier à ce problème, nous avons décidé de modifier directement l'image de la skybox pour qu'elle corresponde à notre scène. Nous avons donc effectué des rotations des faces et du replacement des faces.
